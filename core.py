@@ -62,7 +62,7 @@ class JEntry:
         if context is None:
             context = self.context
         extensions = ['codehilite', 'html_tidy']
-        self.context['content'] = markdown(self.content, extensions)
+        self.context['html_content'] = markdown(self.content, extensions)
         return template.render(**context)
 
     def __parse_header(self, raw_header):
