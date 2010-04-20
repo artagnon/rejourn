@@ -4,18 +4,15 @@ from ConfigParser import ConfigParser
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from markdown import markdown
+from datetime import datetime
 import util
 
 class JBase:
     def __init__(self):
         self.config = self.__parse_config()
-        in_basedir = os.path.join(self.config['basedir'], 'in')
         self.jentries = [JEntry(os.path.join(in_basedir, infile))
                          for infile in os.listdir(in_basedir)
                          if infile.endswith('.txt')]
-        self.jlookup = TemplateLookup(directories = ['design'],
-                                 output_encoding='utf-8',
-                                 encoding_errors='replace')
 
     def write(jentries):
         for jentry in jentries:
