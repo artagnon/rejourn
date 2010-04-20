@@ -1,0 +1,24 @@
+<%inherit file="base.html"/>
+<!-- Single entry -->
+<div id="content">
+  <div id="leaf-title"> 
+    <h1><a href="${permalink}">${title}</a></h1>
+  </div>
+  <div id="leaf-stats"> 
+    <p> 
+      Posted timestamp_h ago [timestamp]
+    </p> 
+  </div> 
+  <div id="leaf-content" class="">
+    <!-- Body -->
+    ${content}
+  </div>
+
+  <!-- Disqus comments -->
+  <h1 id="comment-header">Comments</h1> 
+  <div id="disqus_thread"></div> 
+  <script type="text/javascript" src="http://disqus.com/forums/artagnon/embed.js"></script> 
+  <noscript> 
+    <p><a href="http://disqus.com/forums/artagnon/?url=ref">View the discussion thread.</a></p> 
+  </noscript> 
+</div> 
