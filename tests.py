@@ -1,30 +1,30 @@
+from __future__ import with_statement
 from datetime import datetime
 from nose.tools import with_setup
 from markdown import markdown
 from core import JEntry
 import util
 
-class TestMarkdown:
+class TestAll:
     def __init__(self):
         self.jentry = JEntry('/home/artagnon/dev/rejourn/in/test.txt')
-
-    def setup_jentry(self):
-        pass
-    
-    def teardown_jentry(self):
-        pass
 
     def test_parse_config(self):
         store = self.jentry._JEntry__parse_config()
         assert store.get('basedir', None) == "/home/artagnon/dev/rejourn"
 
-    def test_basic_render(self):
+    def test_render(self):
         assert self.jentry._JEntry__render()
     
-    def test_basic_write(self):
+    def test_write(self):
         assert self.jentry._JEntry__write()
 
-    def test_simple_markdown_output(self):
+    def test_publish(self):
+        self.jentry.publish()
+        with open('/home/artagnon/dev/rejourn/in/test.txt') as infile:
+            assert infile.read().find("published: True") != -1
+
+    def test_markdown_lib(self):
         assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
 
     def test_humanize_timestamp(self):
