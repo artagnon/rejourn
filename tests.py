@@ -1,6 +1,8 @@
+from datetime import datetime
 from nose.tools import with_setup
 from markdown import markdown
 from core import JEntry
+import util
 
 class TestMarkdown:
     def __init__(self):
@@ -25,5 +27,8 @@ class TestMarkdown:
     def test_simple_markdown_output(self):
         assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
 
-class TestPublish:
-    pass
+    def test_humanize_timestamp(self):
+        assert util.humanize_timestamp(datetime(2009, 1, 1, 1, 1, 1)) == "1 year and 3 months ago"
+        assert util.humanize_timestamp(datetime(2010, 1, 1, 1, 1, 1)) == "4 months ago"
+
+
