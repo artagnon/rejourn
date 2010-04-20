@@ -1,0 +1,9 @@
+Rejourn is a static HTML generation engine written in Python. It
+primarily serves to host a programmer's journal. As a result, it
+leaves out common features that other blog engines concentrate on,
+and includes only very niche ones.
+
+Dependencies:
+* Mako
+* Nose
+* Markdown
