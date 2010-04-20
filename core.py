@@ -52,6 +52,14 @@ class JEntry:
         else:
             permalink = util.slugify(context.get('title', 'No Title'))
         return permalink
+    
+    def __build_timestamp_h(self, context = None):
+        if context is None:
+            context = self.context
+        if context.get('pubdate', None):
+            t = datetime.strptime(context['pubdate'], util.timestamp_fmt)
+            return util.humanize_timestamp(t)
+        return '[Unpublished]'
 
     def __render(self, template = None, context = None):
         if template is None:
@@ -96,9 +104,10 @@ class JEntry:
     def publish(self, context = None):
         if context is None:
             context = self.context
-        context.set('Main', 'published', True)
-        self.__write()
+        context['published'] = True
+        context['pubdate'] = datetime.now().strftime(util.timestamp_fmt)
         self.__update_header()
+        self.__write()
 
     def trash(self, context = None):
         if context is None:

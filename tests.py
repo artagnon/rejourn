@@ -9,6 +9,11 @@ class TestAll:
     def __init__(self):
         self.jentry = JEntry('/home/artagnon/dev/rejourn/in/test.txt')
 
+    def test_init(self):
+        title = """The hacker's dream journal engine"""
+        assert self.jentry.context['title'] == title
+        assert self.jentry.context['permalink'] == util.slugify(title)
+
     def test_parse_config(self):
         store = self.jentry._JEntry__parse_config()
         assert store.get('basedir', None) == "/home/artagnon/dev/rejourn"
