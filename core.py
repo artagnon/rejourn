@@ -25,12 +25,9 @@ class JEntry:
         self.context = {}
         self.in_filepath = file_path
         self.config = self.__parse_config()
-        self.basedir = self.config['basedir']
         with open(file_path) as infile:
             raw_header, self.content = infile.read().split('\n---\n')
         self.context = self.__parse_header(raw_header)
-
-        self.context['permalink'] = self.__build_permalink()
         self.outfile =  self.context['permalink'] + '.html'
         tfile = util.view_mapper.get(self.context.get('view', 'default'))
         tlookup = TemplateLookup(directories = ['.'],
@@ -71,6 +68,10 @@ class JEntry:
         for line in raw_header.split('\n'):
             (key, value) = line.split(': ')
             context[key] = value
+
+        # Some post processing
+        context['permalink'] = self.__build_permalink(context)
+        context['pubdate_h'] = self.__build_timestamp_h(context)
         return context
 
     def __update_header(self, context = None):
@@ -87,7 +88,7 @@ class JEntry:
     def __write(self):
         """Render entry and write that to file"""
         
-        outpath = os.path.join(self.basedir, 'out', self.outfile)
+        outpath = os.path.join(self.config['basedir'], 'out', self.outfile)
         with open(outpath, 'w') as outfile:
             outfile.write(self.__render())
         return True
