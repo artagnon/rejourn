@@ -1,0 +1,5 @@
+published: True
+title: My Good friend
+view: single
+---
+This is the body of my *journal* entry!
