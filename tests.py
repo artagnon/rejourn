@@ -1,4 +1,5 @@
 from nose.tools import with_setup
+from markdown import markdown
 from core import JEntry
 
 class TestMarkdown:
@@ -22,7 +23,7 @@ class TestMarkdown:
         assert self.jentry._JEntry__write()
 
     def test_simple_markdown_output(self):
-        assert False
+        assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
 
 class TestPublish:
     pass

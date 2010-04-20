@@ -1,10 +1,9 @@
 from __future__ import with_statement
 import os
-from cStringIO import StringIO
-from tempfile import NamedTemporaryFile
 from ConfigParser import ConfigParser
 from mako.template import Template
 from mako.lookup import TemplateLookup
+from markdown import markdown
 import util
 
 class JBase:
@@ -34,7 +33,6 @@ class JEntry:
         self.context = self.__parse_header(raw_header)
 
         # Sanitize infile
-        self.context['content'] = self.content
         self.context['permalink'] = self.__build_permalink()
         
         self.outfile =  self.context['permalink'] + '.html'
@@ -67,6 +65,8 @@ class JEntry:
             template = self.template
         if context is None:
             context = self.context
+        extensions = ['codehilite', 'html_tidy']
+        self.context['content'] = markdown(self.content, extensions)
         return template.render(**context)
 
     def __parse_header(self, raw_header):

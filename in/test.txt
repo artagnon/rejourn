@@ -2,4 +2,26 @@ published: True
 title: My Good friend
 view: single
 ---
-This is the body of my *journal* entry!
+
+A *few* weeks ago I found to my surprise that I'd been granted four patents. This was all the more surprising because I'd only applied for three. The patents aren't mine, of course. They were assigned to Viaweb, and became Yahoo's when they bought us. But the news set me thinking about the question of software patents generally.
+
+Patents are a hard problem. I've had to advise most of the startups we've funded about them, and despite years of experience I'm still not always sure I'm giving the right advice.
+
+One thing I do feel pretty certain of is that if you're against software patents, you're against patents in general. Gradually our machines consist more and more of software. Things that used to be done with levers and cams and gears are now done with loops and trees and closures. There's nothing special about physical embodiments of control systems that should make them patentable, and the software equivalent not.
+
+    :::python
+    def __render(self, template = None, context = None):
+        if template is None:
+            template = self.template
+        if context is None:
+            context = self.context
+        self.context['content'] = markdown(self.content)
+        return template.render(**context)
+
+    def __parse_header(self, raw_header):
+        context = {}
+        parser = ConfigParser()
+        for line in raw_header.split('\n'):
+            (key, value) = line.split(': ')
+            context[key] = value
+        return context
