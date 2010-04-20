@@ -1,6 +1,20 @@
 import re
 from datetime import datetime
 
+# Standard timestamp format for serlialization
+timestamp_fmt = '%b %d %Y %I:%M %p'
+
+# List of valid headers
+header_table = [
+    'view',
+    'permalink',
+    'published',
+    'pubdate',
+    'title',
+    'author',
+    ]
+
+# Dictionary of views
 view_mapper = {
     'default'  : 'default.html',
     'single'   : 'single.html',

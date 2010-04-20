@@ -23,15 +23,14 @@ class JEntry:
         """Read the infile and populate the object"""
 
         self.context = {}
+        self.in_filepath = file_path
         self.config = self.__parse_config()
         self.basedir = self.config['basedir']
         with open(file_path) as infile:
             raw_header, self.content = infile.read().split('\n---\n')
         self.context = self.__parse_header(raw_header)
 
-        # Sanitize infile
         self.context['permalink'] = self.__build_permalink()
-        
         self.outfile =  self.context['permalink'] + '.html'
         tfile = util.view_mapper.get(self.context.get('view', 'default'))
         tlookup = TemplateLookup(directories = ['.'],
@@ -74,8 +73,16 @@ class JEntry:
             context[key] = value
         return context
 
-    def __update_header(self):
-        pass
+    def __update_header(self, context = None):
+        if context is None:
+            context = self.context
+        with open(self.in_filepath, 'w') as infile_handle:
+            for key in util.header_table:
+                if context.get(key, None):
+                    infile_handle.write(key + ': '
+                                        + context[key].__str__() + '\n')
+            infile_handle.write('---\n')
+            infile_handle.write(self.content)
 
     def __write(self):
         """Render entry and write that to file"""
