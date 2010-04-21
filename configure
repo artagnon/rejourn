@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+#-*- Mode:Python -*-
+import os
+
+"""Generate the Makefile"""
+
+basedir = os.getcwd()
+with open('Makefile', 'w') as makefh:
+    makefh.write("test:\n\tnosetests\n")
+    for filename in os.listdir(os.path.join(os.getcwd(), 'in')):
+        if filename.endswith('.txt'):
+            makefh.write(filename[:-4] + ': '
+                         + os.path.join('in', filename) + '\n\t'
+                         + './build ' + filename[:-4] + '\n')

@@ -7,17 +7,6 @@ from markdown import markdown
 from datetime import datetime
 import util
 
-class JBase:
-    def __init__(self):
-        self.config = self.__parse_config()
-        self.jentries = [JEntry(os.path.join(in_basedir, infile))
-                         for infile in os.listdir(in_basedir)
-                         if infile.endswith('.txt')]
-
-    def write(jentries):
-        for jentry in jentries:
-            jentry.write()
-
 class JEntry:
     def __init__(self, file_path):
         """Read the infile and populate the object"""
@@ -135,11 +124,3 @@ class JEntry:
         self.__update_header(context)
         context = self.__update_context(context)
         self.__write()
-
-    def trash(self, context = None):
-        if context is None:
-            context = self.context
-        pass
-
-jentry = JEntry('/home/artagnon/dev/rejourn/in/test.txt')
-print jentry.context
