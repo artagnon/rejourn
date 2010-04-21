@@ -1,14 +1,29 @@
 #!/usr/bin/env python
 #-*- Mode:Python -*-
+from __future__ import with_statement
 import os
+import util
 
 """Generate the Makefile"""
 
 basedir = os.getcwd()
 with open('Makefile', 'w') as makefh:
-    makefh.write("test:\n\tnosetests\n")
-    for filename in os.listdir(os.path.join(os.getcwd(), 'in')):
+    # Phony test target
+    makefh.write(".PHONY: test\n")    
+    makefh.write("test:\n\tnosetests\n\n")
+
+    # Real targets
+    for filename in os.listdir(os.path.join(basedir, 'in')):
         if filename.endswith('.txt'):
-            makefh.write(filename[:-4] + ': '
+
+            # Find the target from the infile header
+            with open(os.path.join(basedir, 'in', filename), 'r') as infh:
+                raw_header = infh.read().split('\n---\n')[0]
+                header = util.parse_header(raw_header)
+                title = header.get('title', 'No Title')
+                permalink = header.get('permalink', util.build_slug(title))
+                target = os.path.join('out', permalink + '.html')
+                    
+            makefh.write(target + ': '
                          + os.path.join('in', filename) + '\n\t'
                          + './build ' + filename[:-4] + '\n')
