@@ -65,6 +65,10 @@ class JEntry:
         if context is None:
             context = self.context
         if context.get('pubdate', None):
+            t = datetime.strptime(context['pubdate'], util.time_isofmt)
+            return t.strftime(util.time_hfmt)
+        else:
+            return '[Unpublished]'
 
     def __render(self, template = None, context = None):
         """Renders a page given template and context"""
@@ -127,6 +131,7 @@ class JEntry:
         if context is None:
             context = self.context
         context['published'] = True
+        context['pubdate'] = datetime.now().strftime(util.time_isofmt)
         self.__update_header(context)
         context = self.__update_context(context)
         self.__write()
