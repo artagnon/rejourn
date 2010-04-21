@@ -38,6 +38,8 @@ class JEntry:
                                  lookup = tlookup)
 
     def __parse_config(self):
+        """Uses ConfigParser to parse core.cfg configuration file"""
+        
         config = {}
         parser = ConfigParser()
         parser.read('core.cfg')
@@ -46,6 +48,9 @@ class JEntry:
         return config
 
     def __build_permalink(self, context = None):
+        """Either returns permalink or builds it based on the
+        title. If no title is present, title defaults to No Title"""
+        
         if context is None:
             context = self.context
         if context.get('permalink', None):
@@ -55,11 +60,15 @@ class JEntry:
         return permalink
     
     def __build_timestamp_h(self, context = None):
+        """Builds timestamp to be displayed in rendered page"""
+        
         if context is None:
             context = self.context
         if context.get('pubdate', None):
 
     def __render(self, template = None, context = None):
+        """Renders a page given template and context"""
+        
         if template is None:
             template = self.template
         if context is None:
@@ -69,6 +78,8 @@ class JEntry:
         return template.render(**context)
 
     def __parse_header(self, raw_header):
+        """Parses raw header string into context"""
+        
         context = {}
         parser = ConfigParser()
         for line in raw_header.split('\n'):
@@ -77,6 +88,9 @@ class JEntry:
         return context
 
     def __update_header(self, context = None):
+        """Updates file header with given context. Function has
+        side-effects and returns exit status"""
+        
         if context is None:
             context = self.context
         with open(self.in_filepath, 'w') as infile_handle:
@@ -86,6 +100,7 @@ class JEntry:
                                         + context[key].__str__() + '\n')
             infile_handle.write('---\n')
             infile_handle.write(self.content)
+        return True
 
     def __update_context(self, context = None):
         """Post processing: Given certain values in context,
@@ -98,7 +113,7 @@ class JEntry:
         return context
 
     def __write(self):
-        """Render entry and write that to file"""
+        """Render page and write it to a file"""
         
         outpath = os.path.join(self.config['basedir'], 'out', self.outfile)
         with open(outpath, 'w') as outfile:
@@ -106,6 +121,9 @@ class JEntry:
         return True
 
     def publish(self, context = None):
+        """Sets published and pubdate, updates header and context
+        appropriately, and renders the page"""
+        
         if context is None:
             context = self.context
         context['published'] = True
