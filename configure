@@ -7,23 +7,34 @@ import util
 """Generate the Makefile"""
 
 basedir = os.getcwd()
+target = {}
+
+for filename in os.listdir(os.path.join(basedir, 'in')):
+    if filename.endswith('.txt'):
+        # Find targets from the infile headers
+        with open(os.path.join(basedir, 'in', filename), 'r') as infh:
+            raw_header = infh.read().split('\n---\n')[0]
+            header = util.parse_header(raw_header)
+            title = header.get('title', 'No Title')
+            permalink = header.get('permalink', util.build_slug(title))
+            target[filename] = os.path.join('out', permalink + '.html')
+
+# Write the Makefile
 with open('Makefile', 'w') as makefh:
+    # default: attempt to build all target
+    makefh.write("default: ")
+    for infile in target.keys():
+        makefh.write(target[infile] + ' ')
+    makefh.write('\n')
+
+    # define the target
+    for infile in target.keys():
+        makefh.write(target[infile] + ': '
+        + os.path.join('in', infile) + '\n\t'
+        + './build ' + infile[:-4] + '\n')
+
     # Phony test target
     makefh.write(".PHONY: test\n")    
     makefh.write("test:\n\tnosetests\n\n")
-
-    # Real targets
-    for filename in os.listdir(os.path.join(basedir, 'in')):
-        if filename.endswith('.txt'):
-
-            # Find the target from the infile header
-            with open(os.path.join(basedir, 'in', filename), 'r') as infh:
-                raw_header = infh.read().split('\n---\n')[0]
-                header = util.parse_header(raw_header)
-                title = header.get('title', 'No Title')
-                permalink = header.get('permalink', util.build_slug(title))
-                target = os.path.join('out', permalink + '.html')
-                    
-            makefh.write(target + ': '
-                         + os.path.join('in', filename) + '\n\t'
-                         + './build ' + filename[:-4] + '\n')
+    
+        
