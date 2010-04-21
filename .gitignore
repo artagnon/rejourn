@@ -2,5 +2,6 @@
 *.pyc
 .#*
 #*
-out/
+out/*.html
+in/*.txt
 Makefile
