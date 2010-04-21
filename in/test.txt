@@ -1,8 +1,9 @@
 view: single
 permalink: the-hacker-s-dream-journal-eng
 published: True
-pubdate: Apr 21 2010 12:29 AM
+pubdate: 2010-04-21T10:39:12Z
 title: The hacker's dream journal engine
+author: Ramkumar Ramachandra
 ---
 This is a *strong* anvil! I'm surprised ;)
 

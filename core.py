@@ -28,6 +28,7 @@ class JEntry:
         with open(file_path) as infile:
             raw_header, self.content = infile.read().split('\n---\n')
         self.context = self.__parse_header(raw_header)
+        self.context = self.__update_context(self.context)
         self.outfile =  self.context['permalink'] + '.html'
         tfile = util.view_mapper.get(self.context.get('view', 'default'))
         tlookup = TemplateLookup(directories = ['.'],
@@ -73,10 +74,6 @@ class JEntry:
         for line in raw_header.split('\n'):
             (key, value) = line.split(': ')
             context[key] = value
-
-        # Some post processing
-        context['permalink'] = self.__build_permalink(context)
-        context['pubdate_h'] = self.__build_timestamp_h(context)
         return context
 
     def __update_header(self, context = None):
@@ -90,6 +87,16 @@ class JEntry:
             infile_handle.write('---\n')
             infile_handle.write(self.content)
 
+    def __update_context(self, context = None):
+        """Post processing: Given certain values in context,
+        calculates others"""
+        
+        if context is None:
+            context = self.context
+        context['permalink'] = self.__build_permalink(context)
+        context['pubdate_h'] = self.__build_timestamp_h(context)
+        return context
+
     def __write(self):
         """Render entry and write that to file"""
         
@@ -102,6 +109,8 @@ class JEntry:
         if context is None:
             context = self.context
         context['published'] = True
+        self.__update_header(context)
+        context = self.__update_context(context)
         self.__write()
 
     def trash(self, context = None):
