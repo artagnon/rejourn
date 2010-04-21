@@ -18,12 +18,6 @@ class TestAll:
         store = self.jentry._JEntry__parse_config()
         assert store.get('basedir', None) == "/home/artagnon/dev/rejourn"
 
-    def test_render(self):
-        assert self.jentry._JEntry__render()
-    
-    def test_write(self):
-        assert self.jentry._JEntry__write()
-
     def test_publish(self):
         self.jentry.publish()
         with open('/home/artagnon/dev/rejourn/in/test.txt') as infile:
