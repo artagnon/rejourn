@@ -1,6 +1,5 @@
 from __future__ import with_statement
 import os
-from ConfigParser import ConfigParser
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from markdown import markdown
@@ -8,56 +7,26 @@ from datetime import datetime
 import util
 
 class JEntry:
-    def __init__(self, file_path):
+    def __init__(self, inpath):
         """Read the infile and populate the object"""
 
-        self.context = {}
-        self.in_filepath = file_path
-        self.config = self.__parse_config()
-        with open(file_path) as infile:
-            raw_header, self.content = infile.read().split('\n---\n')
-        self.context = self.__parse_header(raw_header)
-        self.context = self.__update_context(self.context)
-        self.outfile =  self.context['permalink'] + '.html'
+        # First patse the config and extract data from infile
+        self.inpath = inpath
+        self.config = util.parse_config('core.cfg')
+        with open(inpath) as infh:
+            raw_header, self.content = infh.read().split('\n---\n')
+
+        # Parse the header and populate the context with this
+        # information
+        self.context = self.__update_context(util.parse_header(raw_header))
+
+        # Get a template ready to write
         tfile = util.view_mapper.get(self.context.get('view', 'default'))
         tlookup = TemplateLookup(directories = ['.'],
                                  output_encoding='utf-8',
                                  encoding_errors='replace')
         self.template = Template(filename = os.path.join('design', tfile),
                                  lookup = tlookup)
-
-    def __parse_config(self):
-        """Uses ConfigParser to parse core.cfg configuration file"""
-        
-        config = {}
-        parser = ConfigParser()
-        parser.read('core.cfg')
-        for (k, v) in parser.items('Main'):
-            config[k] = v
-        return config
-
-    def __build_permalink(self, context = None):
-        """Either returns permalink or builds it based on the
-        title. If no title is present, title defaults to No Title"""
-        
-        if context is None:
-            context = self.context
-        if context.get('permalink', None):
-            permalink = context['permalink']
-        else:
-            permalink = util.slugify(context.get('title', 'No Title'))
-        return permalink
-    
-    def __build_timestamp_h(self, context = None):
-        """Builds timestamp to be displayed in rendered page"""
-        
-        if context is None:
-            context = self.context
-        if context.get('pubdate', None):
-            t = datetime.strptime(context['pubdate'], util.time_isofmt)
-            return t.strftime(util.time_hfmt)
-        else:
-            return '[Unpublished]'
 
     def __render(self, template = None, context = None):
         """Renders a page given template and context"""
@@ -70,30 +39,28 @@ class JEntry:
         self.context['html_content'] = markdown(self.content, extensions)
         return template.render(**context)
 
-    def __parse_header(self, raw_header):
-        """Parses raw header string into context"""
-        
-        context = {}
-        parser = ConfigParser()
-        for line in raw_header.split('\n'):
-            (key, value) = line.split(': ')
-            context[key] = value
-        return context
-
     def __update_header(self, context = None):
         """Updates file header with given context. Function has
         side-effects and returns exit status"""
         
         if context is None:
             context = self.context
-        with open(self.in_filepath, 'w') as infile_handle:
+        with open(self.inpath, 'w') as infh:
+            
+            # Write context information in header_table
             for key in util.header_table:
                 if context.get(key, None):
-                    infile_handle.write(key + ': '
+                    infh.write(key + ': '
                                         + context[key].__str__() + '\n')
-            infile_handle.write('---\n')
-            infile_handle.write(self.content)
-        return True
+
+            # Special: Write mtime information. Not in context
+            infh.write('mtime: ')
+            infh.write(os.stat(self.inpath)
+                                .st_mtime.__str__() + '\n')
+
+            # Finish header. Write back original content
+            infh.write('---\n' + self.content)
+            return True
 
     def __update_context(self, context = None):
         """Post processing: Given certain values in context,
@@ -101,16 +68,24 @@ class JEntry:
         
         if context is None:
             context = self.context
-        context['permalink'] = self.__build_permalink(context)
-        context['pubdate_h'] = self.__build_timestamp_h(context)
+            
+        # permalink might already be in header, in which case we don't
+        # want to change it
+        title = context.get('title', 'No Title')
+        context['permalink'] = context.get('permalink',
+                                           util.build_slug(title))
+        
+        # If pubdate is None, util.build_tiemstamp_h will return the
+        # string "[Unpublished]"
+        pubdate = context.get('pubdate', None)
+        context['pubdate_h'] = util.build_timestamp_h(pubdate)
         return context
 
-    def __write(self):
+    def __write_out(self, outpath):
         """Render page and write it to a file"""
-        
-        outpath = os.path.join(self.config['basedir'], 'out', self.outfile)
-        with open(outpath, 'w') as outfile:
-            outfile.write(self.__render())
+
+        with open(outpath, 'w') as outfh:
+            outfh.write(self.__render())
         return True
 
     def publish(self, context = None):
@@ -119,8 +94,16 @@ class JEntry:
         
         if context is None:
             context = self.context
-        context['published'] = True
-        context['pubdate'] = datetime.now().strftime(util.time_isofmt)
-        self.__update_header(context)
-        context = self.__update_context(context)
-        self.__write()
+
+        # check mtime header to determine whether or not we should update
+        mtime_header = context.get('mtime', None)
+        if mtime_header != os.stat(self.inpath).st_mtime.__str__():
+            # Not up to date
+            context['published'] = True
+            context['pubdate'] = datetime.now().strftime(util.time_isofmt)
+            context = self.__update_context(context)
+            self.__update_header(context)
+            self.__write_out(util.build_outpath(self.config['basedir'],
+                                                self.context['permalink']))
+            return 1
+        return -1
