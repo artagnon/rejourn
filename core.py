@@ -57,9 +57,6 @@ class JEntry:
         if context is None:
             context = self.context
         if context.get('pubdate', None):
-            t = datetime.strptime(context['pubdate'], util.timestamp_fmt)
-            return util.humanize_timestamp(t)
-        return '[Unpublished]'
 
     def __render(self, template = None, context = None):
         if template is None:
@@ -105,8 +102,6 @@ class JEntry:
         if context is None:
             context = self.context
         context['published'] = True
-        context['pubdate'] = datetime.now().strftime(util.timestamp_fmt)
-        self.__update_header()
         self.__write()
 
     def trash(self, context = None):

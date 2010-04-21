@@ -32,8 +32,3 @@ class TestAll:
     def test_markdown_lib(self):
         assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
 
-    def test_humanize_timestamp(self):
-        assert util.humanize_timestamp(datetime(2009, 1, 1, 1, 1, 1)) == "1 year and 3 months ago"
-        assert util.humanize_timestamp(datetime(2010, 1, 1, 1, 1, 1)) == "4 months ago"
-
-
