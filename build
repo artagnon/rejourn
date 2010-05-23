@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- Mode:Python -*-
 import os, sys
-from core import JEntry
+from core import JEntry, JIndex
 
 def main(argv = None):
     if argv is None:
@@ -9,8 +9,12 @@ def main(argv = None):
     if len(argv) == 1:
         print "Usage: %s [target]" %  argv[0]
         return 1
-    jentry = JEntry(os.path.join(os.getcwd(), 'in', argv[1] + '.txt'))
-    jentry.publish()
+    if(argv[1] == 'index'):
+        # Special index handling
+        jpage = JIndex(argv[2:])
+    else:
+        jpage = JEntry(os.path.join(os.getcwd(), 'in', argv[1] + '.txt'))
+    jpage.publish()
 
 if __name__ == "__main__":
     main()

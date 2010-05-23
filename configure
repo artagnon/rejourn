@@ -6,36 +6,43 @@ import util
 
 """Generate the Makefile"""
 
-basedir = os.getcwd()
+indir = 'in'
+outdir = 'out'
 target = {}
 
-for filename in os.listdir(os.path.join(basedir, 'in')):
+for filename in os.listdir(indir):
     if filename.endswith('.txt'):
         # Find targets from the infile headers
-        with open(os.path.join(basedir, 'in', filename), 'r') as infh:
+        with open(os.path.join(indir, filename), 'r') as infh:
             raw_header = infh.read().split('\n---\n')[0]
             header = util.parse_header(raw_header)
             title = header.get('title', 'No Title')
             permalink = header.get('permalink', util.build_slug(title))
-            target[filename] = os.path.join('out', permalink + '.html')
+            target[filename] = os.path.join(outdir, permalink + '.html')
 
 # Write the Makefile
 with open('Makefile', 'w') as makefh:
-    # default: attempt to build all target
-    makefh.write("default: ")
-    for infile in target.keys():
-        makefh.write(target[infile] + ' ')
-    makefh.write('\n')
+    makefh.write(".PHONY: default test clean\n")
+    # PHONY default: Build all targets
+    makefh.write("default: "
+                 + ' '.join(target.values()) + ' '
+                 + os.path.join(outdir, 'index.html') + '\n')
 
-    # define the target
-    for infile in target.keys():
-        makefh.write(target[infile] + ': '
-        + os.path.join('in', infile) + '\n\t'
-        + './build ' + infile[:-4] + '\n')
+    # Write the various targets
+    for filename in target.keys():
+        makefh.write(target[filename] + ': '
+                     + os.path.join(indir, filename) + '\n\t'
+                     + './build ' + filename[:-4] + '\n')
+
+    # Special index target
+    makefh.write(outdir + '/index.html: '
+                 + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
+                 + '\n\t./build index '
+                 + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
 
     # Phony test and clean targets
-    makefh.write(".PHONY: test clean\n")
-    makefh.write("test:\n\tnosetests\n\n")
-    makefh.write("clean:\n\t$(RM) out/*.html\n\n")
+    makefh.write("test:\n\tnosetests\n")
+    makefh.write("clean:\n\t$(RM) "
+                 + os.path.join(outdir, "*.html") + "\n")
     
         
