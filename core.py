@@ -56,6 +56,7 @@ class JEntry:
             # Finish header. Write back original content
             infh.write('---\n' + self.content)
             return True
+        return False
 
     def __update_context(self, context = None):
         """Post processing: Given certain values in context,
@@ -69,6 +70,7 @@ class JEntry:
         title = context.get('title', 'No Title')
         context['permalink'] = context.get('permalink',
                                            util.build_slug(title))
+        context['draft'] = context.get('draft', None);
         
         # If pubdate is None, util.build_tiemstamp_h will return the
         # string "[Unpublished]"
@@ -90,10 +92,12 @@ class JEntry:
         if context is None:
             context = self.context
 
-        context['published'] = True
-        context['pubdate'] = datetime.now().strftime(util.time_isofmt)
-        context = self.__update_context(context)
-        self.__update_header(context)
-        self.__write_out(util.build_outpath(self.config['basedir'],
-                                            self.context['permalink']))
-        return 1
+        if not context['draft']:
+            if not context['pubdate']:
+                context['pubdate'] = datetime.now().strftime(util.time_isofmt)
+            context = self.__update_context(context)
+            self.__update_header(context)
+            self.__write_out(util.build_path(self.config['outdir'],
+                                             self.context['permalink']))
+            return True
+        return False

@@ -10,17 +10,18 @@ time_isofmt = '%Y-%m-%dT%H:%M:%SZ'
 header_table = [
     'view',
     'permalink',
-    'published',
+    'draft',
     'pubdate',
     'title',
     'author',
+    'static',
     ]
 
 # Dictionary of views
 view_mapper = {
     'default'  : 'default.html',
     'single'   : 'single.html',
-    'multiple' : 'multiple.html',
+    'index'    : 'index.html',
     }
 
 def build_slug(text):
@@ -54,8 +55,8 @@ def build_timestamp_h(self, pubdate = None):
         return t.strftime(util.time_hfmt)
     return '[Unpublished]'
 
-def build_outpath(basedir, permalink):
+def build_path(basedir, permalink):
     """Given a basedir and permalink, use os.join to build the path of
     the final file to write"""
     
-    return os.path.join(basedir, 'out', permalink + '.html')
+    return os.path.join(basedir, permalink + '.html')
