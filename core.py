@@ -53,11 +53,6 @@ class JEntry:
                     infh.write(key + ': '
                                         + context[key].__str__() + '\n')
 
-            # Special: Write mtime information. Not in context
-            infh.write('mtime: ')
-            infh.write(os.stat(self.inpath)
-                                .st_mtime.__str__() + '\n')
-
             # Finish header. Write back original content
             infh.write('---\n' + self.content)
             return True
@@ -95,15 +90,10 @@ class JEntry:
         if context is None:
             context = self.context
 
-        # check mtime header to determine whether or not we should update
-        mtime_header = context.get('mtime', None)
-        if mtime_header != os.stat(self.inpath).st_mtime.__str__():
-            # Not up to date
-            context['published'] = True
-            context['pubdate'] = datetime.now().strftime(util.time_isofmt)
-            context = self.__update_context(context)
-            self.__update_header(context)
-            self.__write_out(util.build_outpath(self.config['basedir'],
-                                                self.context['permalink']))
-            return 1
-        return -1
+        context['published'] = True
+        context['pubdate'] = datetime.now().strftime(util.time_isofmt)
+        context = self.__update_context(context)
+        self.__update_header(context)
+        self.__write_out(util.build_outpath(self.config['basedir'],
+                                            self.context['permalink']))
+        return 1
