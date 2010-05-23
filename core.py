@@ -134,12 +134,15 @@ class JIndex:
                 title = header.get('title', 'No Title')
                 extensions = ['codehilite', 'html_tidy']
                 snip = header.get('snip', markdown(content, extensions)[:50] + ' ...')
+                pubdate = header.get('pubdate', None)
 
                 # Has a date it was published, isn't a draft and isn't a static page
-                if header.get('pubdate', None) and not (header.get('draft', None) or header.get('static', None)):
+                if pubdate and not (header.get('draft', None) or header.get('static', None)):
                     entries.append({'title': title,
                                     'permalink': header.get('permalink', util.build_slug(title)),
-                                    'snip': snip})
+                                    'snip': snip,
+                                    'pubdate': pubdate})
+        entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
         context['entries'] = entries
         context['permalink'] = 'index'
         context['title'] = 'Journal'
