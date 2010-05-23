@@ -92,15 +92,13 @@ class JEntry:
         if context is None:
             context = self.context
 
-        if not context['draft']:
-            if not context['pubdate']:
-                context['pubdate'] = datetime.now().strftime(util.time_isofmt)
-            context = self.__update_context(context)
-            self.__update_header(context)
-            self.__write_out(util.build_path(self.config['outdir'],
-                                             self.context['permalink']))
-            return True
-        return False
+        if not context['pubdate']:
+            context['pubdate'] = datetime.now().strftime(util.time_isofmt)
+        context = self.__update_context(context)
+        self.__update_header(context)
+        self.__write_out(util.build_path(self.config['outdir'],
+                                         self.context['permalink']))
+        return True
 
 class JIndex:
     def __init__(self, target_list):
@@ -138,7 +136,7 @@ class JIndex:
                 snip = header.get('snip', markdown(content, extensions)[:50] + ' ...')
 
                 # Has a date it was published, isn't a draft and isn't a static page
-                if header.get('pubdate') and not header.get('draft') and not header.get('static'):
+                if header.get('pubdate', None) and not (header.get('draft', None) or header.get('static', None)):
                     entries.append({'title': title,
                                     'permalink': header.get('permalink', util.build_slug(title)),
                                     'snip': snip})

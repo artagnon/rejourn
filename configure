@@ -18,7 +18,8 @@ for filename in os.listdir(indir):
             header = util.parse_header(raw_header)
             title = header.get('title', 'No Title')
             permalink = header.get('permalink', util.build_slug(title))
-            target[filename] = os.path.join(outdir, permalink + '.html')
+            if not header.get('draft', None):
+                target[filename] = os.path.join(outdir, permalink + '.html')
 
 # Write the Makefile
 with open('Makefile', 'w') as makefh:
