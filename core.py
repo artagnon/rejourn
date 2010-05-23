@@ -101,3 +101,65 @@ class JEntry:
                                              self.context['permalink']))
             return True
         return False
+
+class JIndex:
+    def __init__(self, target_list):
+        """Index builder"""
+
+        self.config = util.parse_config('core.cfg')
+        self.context = self.__update_context(target_list)
+        tfile = util.view_mapper.get('index')
+        tlookup = TemplateLookup(directories = ['.'],
+                                 output_encoding='utf-8',
+                                 encoding_errors='replace')
+        self.template = Template(filename = os.path.join('design', tfile),
+                                 lookup = tlookup)
+
+    def __render(self, template = None, context = None):
+        """Renders a page given template and context"""
+
+        if template is None:
+            template = self.template
+        if context is None:
+            context = self.context
+        return template.render(**context)
+
+    def __update_context(self, target_list = None):
+        """Builds context from target_list"""
+
+        entries = []
+        context = {}
+        for target in target_list:
+            with open(os.path.join(self.config['indir'], target + '.txt'), 'r') as infh:
+                raw_header, content = infh.read().split('\n---\n')
+                header = util.parse_header(raw_header)
+                title = header.get('title', 'No Title')
+                extensions = ['codehilite', 'html_tidy']
+                snip = header.get('snip', markdown(content, extensions)[:50] + ' ...')
+
+                # Has a date it was published, isn't a draft and isn't a static page
+                if header.get('pubdate') and not header.get('draft') and not header.get('static'):
+                    entries.append({'title': title,
+                                    'permalink': header.get('permalink', util.build_slug(title)),
+                                    'snip': snip})
+        context['entries'] = entries
+        context['permalink'] = 'index'
+        context['title'] = 'Journal'
+        return context
+
+    def __write_out(self, outpath):
+        """Render page and write it to a file"""
+
+        with open(outpath, 'w') as outfh:
+            outfh.write(self.__render())
+        return True
+
+    def publish(self, context = None):
+        """Writes out index file after building appropriate context"""
+
+        if context is None:
+            context = self.context
+
+        self.__write_out(util.build_path(self.config['outdir'],
+                                         self.context['permalink']))
+        return True
