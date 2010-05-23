@@ -2,6 +2,6 @@
 *.pyc
 .#*
 #*
-out/*
-in/*.txt
+out/
+in/
 Makefile
