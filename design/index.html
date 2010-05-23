@@ -1,6 +1,6 @@
 <%inherit file="base.html"/>
 <!-- Listing -->
-<div id="content">
+<div id="section-listing">
   <ol>
     % for entry in entries:
     <li><a href="${entry['permalink']}">${entry['title']}</a><span class="snip">${entry['snip']}</span></li>
