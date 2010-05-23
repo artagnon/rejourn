@@ -33,8 +33,9 @@ with open('Makefile', 'w') as makefh:
         + os.path.join('in', infile) + '\n\t'
         + './build ' + infile[:-4] + '\n')
 
-    # Phony test target
-    makefh.write(".PHONY: test\n")    
+    # Phony test and clean targets
+    makefh.write(".PHONY: test clean\n")
     makefh.write("test:\n\tnosetests\n\n")
+    makefh.write("clean:\n\t$(RM) out/*.html\n\n")
     
         
