@@ -44,7 +44,7 @@ def parse_header(raw_header):
         
     context = {}
     for line in raw_header.split('\n'):
-        (key, value) = line.split(': ')
+        (key, value) = line.split(': ', 1)
         context[key] = value
     return context
 

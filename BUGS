@@ -1,4 +1,4 @@
 -*- Mode:Org -*-
 
-* [ ] Header values cannot contain the character ": "
+* [X] Header values cannot contain the character ": "
 * [X] mtime is touched when header doesn't need updating
