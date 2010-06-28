@@ -92,7 +92,7 @@ class JEntry:
         if context is None:
             context = self.context
 
-        if not context['pubdate']:
+        if not context.get('pubdate', None):
             context['pubdate'] = datetime.now().strftime(util.time_isofmt)
         context = self.__update_context(context)
         self.__update_header(context)
