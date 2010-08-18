@@ -12,7 +12,7 @@ class JEntry:
 
         # First patse the config and extract data from infile
         self.inpath = inpath
-        self.config = util.parse_config('core.cfg')
+        self.config = util.parse_config()
         with open(inpath) as infh:
             raw_header, self.content = infh.read().split('\n---\n', 1)
 
@@ -30,7 +30,7 @@ class JEntry:
 
     def __render(self, template = None, context = None):
         """Renders a page given template and context"""
-        
+
         if template is None:
             template = self.template
         if context is None:
@@ -42,7 +42,7 @@ class JEntry:
     def __update_header(self, context = None):
         """Updates file header with given context. Function has
         side-effects and returns exit status"""
-        
+
         if context is None:
             context = self.context
         with open(self.inpath, 'w') as infh:
@@ -61,7 +61,7 @@ class JEntry:
     def __update_context(self, context = None):
         """Post processing: Given certain values in context,
         calculates others"""
-        
+
         if context is None:
             context = self.context
             
@@ -88,7 +88,7 @@ class JEntry:
     def publish(self, context = None):
         """Sets published and pubdate, updates header and context
         appropriately, and renders the page"""
-        
+
         if context is None:
             context = self.context
 
@@ -104,7 +104,7 @@ class JIndex:
     def __init__(self, target_list):
         """Index builder"""
 
-        self.config = util.parse_config('core.cfg')
+        self.config = util.parse_config()
         self.context = self.__update_context(target_list)
         tfile = util.view_mapper.get('index')
         tlookup = TemplateLookup(directories = ['.'],
