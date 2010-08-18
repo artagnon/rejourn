@@ -48,12 +48,12 @@ def parse_header(raw_header):
         context[key] = value
     return context
 
-def build_timestamp_h(self, pubdate = None):
+def build_timestamp_h(pubdate = None):
     """Builds timestamp to be displayed in rendered page"""
     
     if pubdate is not None:
-        t = datetime.strptime(pubdate, util.time_isofmt)
-        return t.strftime(util.time_hfmt)
+        t = datetime.strptime(pubdate, time_isofmt)
+        return t.strftime(time_hfmt)
     return '[Unpublished]'
 
 def build_path(basedir, permalink):
