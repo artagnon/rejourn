@@ -5,11 +5,12 @@ from markdown import markdown
 from core import JEntry
 import util
 
-testfile = '/home/artagnon/dev/rejourn/in/hackers-dream-journal.txt'
+inf = 't/test.txt'
+outf = 't/test.html'
 
 class TestAll:
     def __init__(self):
-        self.jentry = JEntry(testfile)
+        self.jentry = JEntry(inf)
 
     def test_init(self):
         title = """The hacker's dream journal engine"""
@@ -22,16 +23,12 @@ class TestAll:
         assert header['pubdate'] == '2010-04-21T12:04:36Z'
 
     def test_parse_config(self):
-        config = util.parse_config('core.cfg')
-        assert config.get('basedir', None) == "/home/artagnon/dev/rejourn"
+        config = util.parse_config()
+        assert config.get('indir', None)
+        assert config.get('outdir', None)
 
     def test_publish(self):
-        self.jentry.publish()
-        with open(testfile) as infile:
-            assert infile.read().find("published: True") != -1
-
-    def test_mtime_check(self):
-        assert self.jentry.publish() == -1
+        assert self.jentry.publish()
 
     def test_markdown_lib(self):
         assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"

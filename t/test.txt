@@ -1,0 +1,32 @@
+view: single
+permalink: the-hacker-s-dream-journal-eng
+draft: True
+pubdate: 2010-05-23T11:23:37Z
+title: The hacker's dream journal engine
+author: Ramkumar Ramachandra
+---
+This is a *strong* anvil! I'm surprised ;)
+
+     :::python
+    def __update_header(self, context = None):
+        if context is None:
+            context = self.context
+        with open(self.in_filepath, 'w') as infile:
+            for key in header_table:
+                if context.get(key, None):
+                    infile.write(key + ': ' + context[key].__str__() + '\n')
+            infile.write('---\n')
+            infile.write(self.content)
+
+    def __write(self):
+        """Render entry and write that to file"""
+        
+        outpath = os.path.join(self.basedir, 'out', self.outfile)
+        with open(outpath, 'w') as outfile:
+            outfile.write(self.__render())
+        return True
+
+Find out more about me on [Google][1] or just go to my [website][2].
+
+[1]: http://google.com
+[2]: http://artagnon.com
