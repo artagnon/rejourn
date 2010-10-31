@@ -149,7 +149,9 @@ class JIndex:
                 snip = header.get('snip', '')
                 if not len(snip) and (not 'snips' in self.config or self.config['snips'] == True):
                     snip = util.htransform(content, self.config.get('htransform', None))[:50] + ' ...'
-                if self.rss:
+                if not self.rss:
+                    html_content = util.htransform(content, self.config.get('htransform', None))
+                else:
                     rss_content = saxutils.escape(util.htransform(content, self.config.get('htransform', None)))
                 pubdate = header.get('pubdate', None)
                 pubdate_h = util.build_timestamp_h(pubdate, rss=self.rss)
@@ -161,7 +163,9 @@ class JIndex:
                                     'snip': snip,
                                     'pubdate': pubdate,
                                     'pubdate_h': pubdate_h})
-                    if self.rss:
+                    if not self.rss:
+                        entries[-1]['html_content'] = html_content
+                    else:
                         entries[-1]['rss_content'] = rss_content
         entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
         indexlen = int(self.config.get('indexlen', 10))
