@@ -31,8 +31,8 @@ class TestAll:
         assert self.jentry.publish()
 
     def test_markdown_lib(self):
-        assert util.markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
+        assert util.htransform("*strong* hammer", 'markdown') == "<p><em>strong</em> hammer</p>"
 
     def test_asciidoc_lib(self):
-        assert util.asciidoc("`strong` `{hammer}`") == """<div class="paragraph"><p><tt>strong</tt> <tt>{hammer}</tt></p></div>\r\n"""
+        assert util.htransform("`strong` `{hammer}`", 'asciidoc') == """<div class="paragraph"><p><tt>strong</tt> <tt>{hammer}</tt></p></div>\r\n"""
 # vim:set shiftwidth=4 softtabstop=4 expandtab:

@@ -1,7 +1,8 @@
 import re, os
+import time
+import hashlib
 from datetime import datetime
 from ConfigParser import ConfigParser
-import time
 from email.Utils import formatdate
 
 # Standard timestamp format for serlialization
@@ -83,8 +84,30 @@ def asciidoc(content):
     import StringIO
     asciidoc = asciidocapi.AsciiDocAPI()
     asciidoc.options('--no-header-footer')
-    infile = StringIO.StringIO(content)
-    outfile = StringIO.StringIO()
-    asciidoc.execute(infile, outfile)
-    return outfile.getvalue()
+    input_buf = StringIO.StringIO(content)
+    output_buf = StringIO.StringIO()
+    asciidoc.execute(input_buf, output_buf)
+    return output_buf.getvalue()
+
+# hTransform mapper
+htransform_mapper = {
+    'markdown'  : markdown,
+    'asciidoc'  : asciidoc,
+    }
+
+def htransform(content, transform):
+    # Attempt to fetch it from cache
+    digest = hashlib.sha1(content).hexdigest()
+    if os.path.exists(os.path.join('cache', digest)):
+        with open(os.path.join('cache', digest), 'r') as infh:
+            return infh.read()
+
+    # Choose a htransform function 
+    render_function = htransform_mapper.get(transform, markdown)
+    output_buf = render_function(content)
+
+    # Write to cache before returning
+    with open(os.path.join('cache', digest), 'w') as outfh:
+        outfh.write(output_buf)
+        return output_buf
 # vim:set shiftwidth=4 softtabstop=4 expandtab:

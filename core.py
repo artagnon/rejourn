@@ -35,10 +35,9 @@ class JEntry:
             template = self.template
         if context is None:
             context = self.context
-        if not 'render' in self.config or self.config['render'] == 'markdown':
-            self.context['html_content'] = util.markdown(self.content)
-        elif self.config['render'] == 'asciidoc':
-            self.context['html_content'] = util.asciidoc(self.content)
+
+        context['html_content'] = util.htransform(self.content,
+                                                  self.config.get('htransform', None))
         return template.render(**context)
 
     def __update_header(self, context = None):
@@ -149,15 +148,9 @@ class JIndex:
                 extensions = ['codehilite', 'html_tidy']
                 snip = header.get('snip', '')
                 if not len(snip) and (not 'snips' in self.config or self.config['snips'] == True):
-                    if not 'render' in self.config or self.config['render'] == 'markdown':
-                        snip = util.markdown(content)[:50] + ' ...'
-                    elif self.config['render'] == 'asciidoc':
-                        snip = util.asciidoc(content)[:50] + ' ...'
+                    snip = util.htransform(content, self.config.get('htransform', None))[:50] + ' ...'
                 if self.rss:
-                    if not 'render' in self.config or self.config['render'] == 'markdown':
-                        rss_content = saxutils.escape(util.markdown(content))
-                    elif self.config['render'] == 'asciidoc':
-                        rss_content = saxutils.escape(util.asciidoc(content))
+                    rss_content = saxutils.escape(util.htransform(content, self.config.get('htransform', None)))
                 pubdate = header.get('pubdate', None)
                 pubdate_h = util.build_timestamp_h(pubdate, rss=self.rss)
 
