@@ -21,7 +21,7 @@ class JEntry:
         self.context = self.__update_context(util.parse_header(raw_header))
 
         # Get a template ready to write
-        tfile = util.view_mapper.get(self.context.get('view', 'default'))
+        tfile = util.view_mapper.get(self.context.get('view', 'single'))
         tlookup = TemplateLookup(directories = ['.'],
                                  output_encoding='utf-8',
                                  encoding_errors='replace')

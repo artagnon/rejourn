@@ -24,7 +24,6 @@ header_table = [
 
 # Dictionary of views
 view_mapper = {
-    'default'  : 'default.html',
     'single'   : 'single.html',
     'index'    : 'index.html',
     'rss'      : 'rss.xml',
