@@ -1,7 +1,6 @@
 from __future__ import with_statement
 from datetime import datetime
 from nose.tools import with_setup
-from markdown import markdown
 from core import JEntry
 import util
 
@@ -31,5 +30,7 @@ class TestAll:
         assert self.jentry.publish()
 
     def test_markdown_lib(self):
-        assert markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
+        assert util.markdown("*strong* hammer") == "<p><em>strong</em> hammer</p>"
 
+    def test_asciidoc_lib(self):
+        assert util.asciidoc("`strong` `{hammer}`") == """<div class="paragraph"><p><tt>strong</tt> <tt>{hammer}</tt></p></div>\r\n"""

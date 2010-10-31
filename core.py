@@ -2,7 +2,6 @@ from __future__ import with_statement
 import os
 from mako.template import Template
 from mako.lookup import TemplateLookup
-from markdown import markdown
 from datetime import datetime
 import util
 
@@ -35,8 +34,10 @@ class JEntry:
             template = self.template
         if context is None:
             context = self.context
-        extensions = ['codehilite', 'html_tidy']
-        self.context['html_content'] = markdown(self.content, extensions)
+        if not 'render' in self.config or self.config['render'] == 'markdown':
+            self.context['html_content'] = util.markdown(self.content)
+        elif self.config['render'] == 'asciidoc':
+            self.context['html_content'] = util.asciidoc(self.content)
         return template.render(**context)
 
     def __update_header(self, context = None):
@@ -133,7 +134,10 @@ class JIndex:
                 header = util.parse_header(raw_header)
                 title = header.get('title', 'No Title')
                 extensions = ['codehilite', 'html_tidy']
-                snip = header.get('snip', markdown(content, extensions)[:50] + ' ...')
+                if not 'render' in self.config or self.config['render'] == 'markdown':
+                    snip = header.get('snip', util.markdown(content)[:50] + ' ...')
+                elif self.config['render'] == 'asciidoc':
+                    snip = header.get('snip', util.asciidoc(content)[:50] + ' ...')
                 pubdate = header.get('pubdate', None)
 
                 # Has a date it was published, isn't a draft and isn't a static page

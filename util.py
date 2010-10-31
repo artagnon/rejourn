@@ -61,3 +61,18 @@ def build_path(basedir, permalink):
     the final file to write"""
 
     return os.path.join(basedir, permalink + '.html')
+
+def markdown(content):
+    from markdown import markdown
+    extensions = ['codehilite', 'html_tidy']
+    return markdown(content, extensions)
+
+def asciidoc(content):
+    import asciidocapi
+    import StringIO
+    asciidoc = asciidocapi.AsciiDocAPI()
+    asciidoc.options('--no-header-footer')
+    infile = StringIO.StringIO(content)
+    outfile = StringIO.StringIO()
+    asciidoc.execute(infile, outfile)
+    return outfile.getvalue()
