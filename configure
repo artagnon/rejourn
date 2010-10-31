@@ -34,6 +34,7 @@ with open('Makefile', 'w') as makefh:
     # PHONY default: Build all targets
     makefh.write("default: "
                  + ' '.join(target.values()) + ' '
+                 + os.path.join(outdir, 'archive.html') + ' '
                  + os.path.join(outdir, 'index.html') + ' '
                  + os.path.join(outdir, 'index.rss') + ' '
                  + ' '.join(map(lambda t: os.path.join(outdir, t + '.html'), tags.keys())) + ' '
@@ -45,7 +46,11 @@ with open('Makefile', 'w') as makefh:
                      + os.path.join(indir, filename) + '\n\t'
                      + './build ' + filename[:-4] + '\n')
 
-    # Special index target
+    # Special archive and index target
+    makefh.write(outdir + '/archive.html: '
+                 + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
+                 + '\n\t./build archive '
+                 + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
     makefh.write(outdir + '/index.html: '
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t./build index '

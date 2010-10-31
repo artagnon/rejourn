@@ -164,9 +164,13 @@ class JIndex:
                     if self.rss:
                         entries[-1]['rss_content'] = rss_content
         entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
-        context['entries'] = entries
+        indexlen = int(self.config.get('indexlen', 10))
+        if self.name == 'index' and indexlen > 0:
+            context['entries'] = entries[:indexlen]
+        else:
+            context['entries'] = entries
         context['permalink'] = self.name
-        if self.name.startswith('index'):
+        if self.name == 'index' or self.name == 'archive':
             context['title'] = self.config['title']
         else:
             context['title'] = self.config['title'] + ' - Tags: ' + self.name.replace('.rss', '')
