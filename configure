@@ -35,7 +35,9 @@ with open('Makefile', 'w') as makefh:
     makefh.write("default: "
                  + ' '.join(target.values()) + ' '
                  + os.path.join(outdir, 'index.html') + ' '
-                 + ' '.join(map(lambda t: os.path.join(outdir, t + '.html'), tags.keys())) + '\n')
+                 + os.path.join(outdir, 'index.rss') + ' '
+                 + ' '.join(map(lambda t: os.path.join(outdir, t + '.html'), tags.keys())) + ' '
+                 + ' '.join(map(lambda t: os.path.join(outdir, t + '.rss'), tags.keys())) + '\n')
 
     # Write the various targets
     for filename in target.keys():
@@ -48,6 +50,10 @@ with open('Makefile', 'w') as makefh:
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t./build index '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
+    makefh.write(outdir + '/index.rss: '
+                 + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
+                 + '\n\t./build index.rss '
+                 + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
 
     # Tags
     for tag in tags:
@@ -55,11 +61,16 @@ with open('Makefile', 'w') as makefh:
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
                 + '\n\t./build ' + tag + ' '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
+        makefh.write(outdir + '/' + tag + '.rss: '
+                + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
+                + '\n\t./build ' + tag + '.rss '
+                + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
 
     # Phony test and clean targets
     makefh.write("test:\n\tnosetests\n")
     makefh.write("clean:\n\t$(RM) "
-                 + os.path.join(outdir, "*.html") + "\n")
+                 + os.path.join(outdir, "*.html") + " "
+                 + os.path.join(outdir, "*.rss") + "\n")
     
         
 # vim:set shiftwidth=4 softtabstop=4 expandtab:

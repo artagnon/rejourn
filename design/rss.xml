@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>${title}</title>
+        <description></description>
+        <link>${baseurl}</link>
+        % for entry in entries:
+        <item>
+            <title>${entry['title']}</title>
+            <description>${entry['rss_content']}</description>
+            <link>${baseurl}${entry['permalink']}</link>
+            <pubDate>${entry['pubdate_h']}</pubDate>
+        </item>
+        % endfor
+    </channel>
+</rss>
+## vim:set shiftwidth=4 softtabstop=4 expandtab:

@@ -11,7 +11,10 @@ def main(argv = None):
         return 1
     if(len(argv) > 2):
         # Special index/tag handling
-        jpage = JIndex(argv[1], argv[2:])
+        if not argv[1].endswith('.rss'):
+            jpage = JIndex(argv[1], argv[2:])
+        else:
+            jpage = JIndex(argv[1], argv[2:], rss = True)
     else:
         jpage = JEntry(os.path.join(os.getcwd(), 'in', argv[1] + '.txt'))
     jpage.publish()

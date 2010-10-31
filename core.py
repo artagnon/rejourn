@@ -2,6 +2,7 @@ from __future__ import with_statement
 import os
 from mako.template import Template
 from mako.lookup import TemplateLookup
+from xml.sax import saxutils
 from datetime import datetime
 import util
 
@@ -104,13 +105,17 @@ class JEntry:
         return True
 
 class JIndex:
-    def __init__(self, name, target_list):
+    def __init__(self, name, target_list, rss = False):
         """Index builder"""
 
         self.config = util.parse_config()
         self.name = name
+        self.rss = rss
         self.context = self.__update_context(target_list)
-        tfile = util.view_mapper.get('index')
+        if not rss:
+            tfile = util.view_mapper.get('index')
+        else:
+            tfile = util.view_mapper.get('rss')
         tlookup = TemplateLookup(directories = ['.'],
                                  output_encoding='utf-8',
                                  encoding_errors='replace')
@@ -143,21 +148,31 @@ class JIndex:
                         snip = util.markdown(content)[:50] + ' ...'
                     elif self.config['render'] == 'asciidoc':
                         snip = util.asciidoc(content)[:50] + ' ...'
+                if self.rss:
+                    if not 'render' in self.config or self.config['render'] == 'markdown':
+                        rss_content = saxutils.escape(util.markdown(content))
+                    elif self.config['render'] == 'asciidoc':
+                        rss_content = saxutils.escape(util.asciidoc(content))
                 pubdate = header.get('pubdate', None)
+                pubdate_h = util.build_timestamp_h(pubdate, rss=self.rss)
 
                 # Has a date it was published, isn't a draft and isn't a static page
                 if pubdate and not (header.get('draft', None) or header.get('static', None)):
                     entries.append({'title': title,
                                     'permalink': header.get('permalink', util.build_slug(title)),
                                     'snip': snip,
-                                    'pubdate': pubdate})
+                                    'pubdate': pubdate,
+                                    'pubdate_h': pubdate_h})
+                    if self.rss:
+                        entries[-1]['rss_content'] = rss_content
         entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
         context['entries'] = entries
         context['permalink'] = self.name
-        if self.name == 'index':
+        if self.name.startswith('index'):
             context['title'] = self.config['title']
         else:
-            context['title'] = self.config['title'] + ' - Tags: ' + self.name
+            context['title'] = self.config['title'] + ' - Tags: ' + self.name.replace('.rss', '')
+        context['baseurl'] = self.config['baseurl']
         return context
 
     def __write_out(self, outpath):

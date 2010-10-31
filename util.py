@@ -1,6 +1,8 @@
 import re, os
 from datetime import datetime
 from ConfigParser import ConfigParser
+import time
+from email.Utils import formatdate
 
 # Standard timestamp format for serlialization
 time_hfmt = '%A, %d %B %Y'
@@ -24,6 +26,7 @@ view_mapper = {
     'default'  : 'default.html',
     'single'   : 'single.html',
     'index'    : 'index.html',
+    'rss'      : 'rss.xml',
     }
 
 def build_slug(text):
@@ -49,19 +52,26 @@ def parse_header(raw_header):
         context[key] = value
     return context
 
-def build_timestamp_h(pubdate = None):
+def build_timestamp_h(pubdate = None, rss = False):
     """Builds timestamp to be displayed in rendered page"""
 
     if pubdate is not None:
-        t = datetime.strptime(pubdate, time_isofmt)
-        return t.strftime(time_hfmt)
+        if not rss:
+            t = datetime.strptime(pubdate, time_isofmt)
+            return t.strftime(time_hfmt)
+        else:
+            t = time.mktime(time.strptime(pubdate, time_isofmt))
+            return formatdate(t, True)
     return '[Unpublished]'
 
 def build_path(basedir, permalink):
     """Given a basedir and permalink, use os.join to build the path of
     the final file to write"""
 
-    return os.path.join(basedir, permalink + '.html')
+    if not permalink.endswith(".rss"):
+        return os.path.join(basedir, permalink + '.html')
+    else:
+        return os.path.join(basedir, permalink)
 
 def markdown(content):
     from markdown import markdown
