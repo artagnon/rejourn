@@ -137,10 +137,12 @@ class JIndex:
                 header = util.parse_header(raw_header)
                 title = header.get('title', 'No Title')
                 extensions = ['codehilite', 'html_tidy']
-                if not 'render' in self.config or self.config['render'] == 'markdown':
-                    snip = header.get('snip', util.markdown(content)[:50] + ' ...')
-                elif self.config['render'] == 'asciidoc':
-                    snip = header.get('snip', util.asciidoc(content)[:50] + ' ...')
+                snip = header.get('snip', '')
+                if not len(snip) and (not 'snips' in self.config or self.config['snips'] == True):
+                    if not 'render' in self.config or self.config['render'] == 'markdown':
+                        snip = util.markdown(content)[:50] + ' ...'
+                    elif self.config['render'] == 'asciidoc':
+                        snip = util.asciidoc(content)[:50] + ' ...'
                 pubdate = header.get('pubdate', None)
 
                 # Has a date it was published, isn't a draft and isn't a static page
