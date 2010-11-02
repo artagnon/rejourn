@@ -153,9 +153,9 @@ class JIndex:
         context['entries'] = entries
         context['permalink'] = self.name
         if self.name == 'index':
-            context['title'] = 'Journal'
+            context['title'] = self.config['title']
         else:
-            context['title'] = 'Journal - Tags: ' + self.name
+            context['title'] = self.config['title'] + ' - Tags: ' + self.name
         return context
 
     def __write_out(self, outpath):
