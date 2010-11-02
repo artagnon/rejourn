@@ -9,6 +9,7 @@ import util
 indir = 'in'
 outdir = 'out'
 target = {}
+tags = {}
 
 for filename in os.listdir(indir):
     if filename.endswith('.txt'):
@@ -20,6 +21,12 @@ for filename in os.listdir(indir):
             permalink = header.get('permalink', util.build_slug(title))
             if not header.get('draft', None):
                 target[filename] = os.path.join(outdir, permalink + '.html')
+                if header.get('tags', None):
+                    for tag in header.get('tags', None).split(', '):
+                        if tag in tags.keys():
+                            tags[tag].append(filename)
+                        else:
+                            tags[tag] = [filename]
 
 # Write the Makefile
 with open('Makefile', 'w') as makefh:
@@ -27,7 +34,8 @@ with open('Makefile', 'w') as makefh:
     # PHONY default: Build all targets
     makefh.write("default: "
                  + ' '.join(target.values()) + ' '
-                 + os.path.join(outdir, 'index.html') + '\n')
+                 + os.path.join(outdir, 'index.html') + ' '
+                 + ' '.join(map(lambda t: os.path.join(outdir, t + '.html'), tags.keys())) + '\n')
 
     # Write the various targets
     for filename in target.keys():
@@ -40,6 +48,13 @@ with open('Makefile', 'w') as makefh:
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t./build index '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
+
+    # Tags
+    for tag in tags:
+        makefh.write(outdir + '/' + tag + '.html: '
+                + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
+                + '\n\t./build ' + tag + ' '
+                + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
 
     # Phony test and clean targets
     makefh.write("test:\n\tnosetests\n")

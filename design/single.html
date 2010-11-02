@@ -9,6 +9,14 @@
     <span class="timeago" title="${pubdate}">${pubdate_h}</span>
     by ${author}
   </p>
+% if tags:
+  <p>
+    Tags:
+    % for tag in tags.split(', '):
+    <a href="${tag}">${tag}</a>
+    % endfor
+  </p>
+% endif
 </div>
 <div id="leaf-content" class="">
   <!-- Body -->

@@ -4,6 +4,7 @@ draft: True
 pubdate: 2010-05-23T11:23:37Z
 title: The hacker's dream journal engine
 author: Ramkumar Ramachandra
+tags: foo, bar
 ---
 This is a *strong* anvil! I'm surprised ;)
 

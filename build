@@ -9,9 +9,9 @@ def main(argv = None):
     if len(argv) == 1:
         print "Usage: %s [target]" %  argv[0]
         return 1
-    if(argv[1] == 'index'):
-        # Special index handling
-        jpage = JIndex(argv[2:])
+    if(len(argv) > 2):
+        # Special index/tag handling
+        jpage = JIndex(argv[1], argv[2:])
     else:
         jpage = JEntry(os.path.join(os.getcwd(), 'in', argv[1] + '.txt'))
     jpage.publish()

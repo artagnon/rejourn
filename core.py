@@ -95,6 +95,8 @@ class JEntry:
 
         if not context.get('pubdate', None):
             context['pubdate'] = datetime.now().strftime(util.time_isofmt)
+        if not context.get('tags', None):
+            context['tags'] = ""
         context = self.__update_context(context)
         self.__update_header(context)
         self.__write_out(util.build_path(self.config['outdir'],
@@ -102,10 +104,11 @@ class JEntry:
         return True
 
 class JIndex:
-    def __init__(self, target_list):
+    def __init__(self, name, target_list):
         """Index builder"""
 
         self.config = util.parse_config()
+        self.name = name
         self.context = self.__update_context(target_list)
         tfile = util.view_mapper.get('index')
         tlookup = TemplateLookup(directories = ['.'],
@@ -148,8 +151,11 @@ class JIndex:
                                     'pubdate': pubdate})
         entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
         context['entries'] = entries
-        context['permalink'] = 'index'
-        context['title'] = 'Journal'
+        context['permalink'] = self.name
+        if self.name == 'index':
+            context['title'] = 'Journal'
+        else:
+            context['title'] = 'Journal - Tags: ' + self.name
         return context
 
     def __write_out(self, outpath):

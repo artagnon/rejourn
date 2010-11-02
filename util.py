@@ -16,6 +16,7 @@ header_table = [
     'author',
     'static',
     'snip',
+    'tags',
     ]
 
 # Dictionary of views
