@@ -35,3 +35,4 @@ class TestAll:
 
     def test_asciidoc_lib(self):
         assert util.asciidoc("`strong` `{hammer}`") == """<div class="paragraph"><p><tt>strong</tt> <tt>{hammer}</tt></p></div>\r\n"""
+# vim:set shiftwidth=4 softtabstop=4 expandtab:

@@ -174,3 +174,4 @@ class JIndex:
         self.__write_out(util.build_path(self.config['outdir'],
                                          self.context['permalink']))
         return True
+# vim:set shiftwidth=4 softtabstop=4 expandtab:

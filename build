@@ -18,3 +18,4 @@ def main(argv = None):
 
 if __name__ == "__main__":
     main()
+# vim:set shiftwidth=4 softtabstop=4 expandtab:

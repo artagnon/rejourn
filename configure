@@ -62,3 +62,4 @@ with open('Makefile', 'w') as makefh:
                  + os.path.join(outdir, "*.html") + "\n")
     
         
+# vim:set shiftwidth=4 softtabstop=4 expandtab:

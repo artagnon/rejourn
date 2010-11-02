@@ -77,3 +77,4 @@ def asciidoc(content):
     outfile = StringIO.StringIO()
     asciidoc.execute(infile, outfile)
     return outfile.getvalue()
+# vim:set shiftwidth=4 softtabstop=4 expandtab:
