@@ -47,16 +47,21 @@ class JEntry:
 
         if context is None:
             context = self.context
-        with open(self.inpath, 'w') as infh:
+        buf = []
             
-            # Write context information in header_table
-            for key in util.header_table:
-                if context.get(key, None):
-                    infh.write(key + ': '
-                                        + context[key].__str__() + '\n')
+        # Write context information in header_table
+        for key in util.header_table:
+            if context.get(key, None):
+                buf.append(key + ': '
+                                    + context[key].__str__() + '\n')
 
-            # Finish header. Write back original content
-            infh.write('---\n' + self.content)
+        # Finish header. Write back original content
+        buf.append('---\n' + self.content)
+        with open(self.inpath, 'r') as infh:
+            if infh.read() == ''.join(buf):
+                return True
+        with open(self.inpath, 'w') as infh:
+            infh.write(''.join(buf))
             return True
         return False
 
