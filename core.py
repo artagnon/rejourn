@@ -14,7 +14,7 @@ class JEntry:
         self.inpath = inpath
         self.config = util.parse_config()
         with open(inpath) as infh:
-            raw_header, self.content = infh.read().split('\n---\n', 1)
+            raw_header, self.content = infh.read().split('\n' + self.config.get('separator', '---') + '\n', 1)
 
         # Parse the header and populate the context with this
         # information
@@ -55,7 +55,7 @@ class JEntry:
                                     + context[key].__str__() + '\n')
 
         # Finish header. Write back original content
-        buf.append('---\n' + self.content)
+        buf.append(self.config.get('separator', '---') + '\n' + self.content)
         with open(self.inpath, 'r') as infh:
             if infh.read() == ''.join(buf):
                 return True
@@ -142,7 +142,7 @@ class JIndex:
         context = {}
         for target in target_list:
             with open(os.path.join(self.config['indir'], target + '.txt'), 'r') as infh:
-                raw_header, content = infh.read().split('\n---\n', 1)
+                raw_header, content = infh.read().split('\n' + self.config.get('separator', '---') + '\n', 1)
                 header = util.parse_header(raw_header)
                 title = header.get('title', 'No Title')
                 extensions = ['codehilite', 'html_tidy']
