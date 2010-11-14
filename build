@@ -2,8 +2,10 @@
 #-*- Mode:Python -*-
 import os, sys
 from core import JEntry, JIndex
+from util import parse_config
 
 def main(argv = None):
+    config = parse_config()
     if argv is None:
         argv = sys.argv
     if len(argv) == 1:
@@ -16,7 +18,7 @@ def main(argv = None):
         else:
             jpage = JIndex(argv[1], argv[2:], rss = True)
     else:
-        jpage = JEntry(os.path.join(os.getcwd(), 'in', argv[1] + '.txt'))
+        jpage = JEntry(os.path.join(os.getcwd(), config.get('indir', 'in'), argv[1] + '.txt'))
     jpage.publish()
 
 if __name__ == "__main__":

@@ -6,8 +6,9 @@ import util
 
 """Generate the Makefile"""
 
-indir = 'in'
-outdir = 'out'
+config = util.parse_config()
+indir = config.get('indir')
+outdir = config.get('outdir')
 target = {}
 tags = {}
 
