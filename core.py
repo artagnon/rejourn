@@ -25,7 +25,7 @@ class JEntry:
         tlookup = TemplateLookup(directories = ['.'],
                                  output_encoding='utf-8',
                                  encoding_errors='replace')
-        self.template = Template(filename = os.path.join('design', tfile),
+        self.template = Template(filename = os.path.join(self.config.get('designdir', 'design'), tfile),
                                  lookup = tlookup)
 
     def __render(self, template = None, context = None):
@@ -123,7 +123,7 @@ class JIndex:
         tlookup = TemplateLookup(directories = ['.'],
                                  output_encoding='utf-8',
                                  encoding_errors='replace')
-        self.template = Template(filename = os.path.join('design', tfile),
+        self.template = Template(filename = os.path.join(self.config.get('designdir', 'design'), tfile),
                                  lookup = tlookup)
 
     def __render(self, template = None, context = None):
