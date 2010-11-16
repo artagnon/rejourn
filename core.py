@@ -5,6 +5,10 @@ from mako.lookup import TemplateLookup
 from xml.sax import saxutils
 from datetime import datetime
 import util
+import sys
+
+sys = reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class JEntry:
     def __init__(self, inpath):

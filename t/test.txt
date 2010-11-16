@@ -29,5 +29,7 @@ This is a *strong* anvil! I'm surprised ;)
 
 Find out more about me on [Google][1] or just go to my [website][2].
 
+Some test UTF-8 characters: ĂŠĂĄĹĹą.
+
 [1]: http://google.com
 [2]: http://artagnon.com
