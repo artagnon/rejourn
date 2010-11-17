@@ -32,9 +32,10 @@ Features:
 
 USAGE
 -----
-Modify core.cfg to set the indir and outdir. Run the `configure`
-script to generate the Makefile; then run `make` to produce the actual
-HTML pages in outdir. Run `make test` to run the included tests.
+Copy core.cfg.example as core.cfg and modify it to set the indir, outdir and
+possibly other options. Run the `configure` script to generate the Makefile;
+then run `make` to produce the actual HTML pages in outdir. Run `make test` to
+run the included tests.
 
 When an existing input file is modified, run `make` to update the
 output file. When the Makefile needs to be regenerated to build new

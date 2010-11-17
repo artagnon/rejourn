@@ -1,0 +1,19 @@
+[Main]
+# The directory where generated static HTML files will be written.
+outdir: /home/artagnon/dev/rejourn/out
+# Where input txt files will be searched (non-recursively).
+indir: /home/artagnon/dev/rejourn/in
+# Where the design templates live.
+designdir: design
+# Rendering engine to use. Possible values: asciidoc and markdown
+htransform: markdown
+# Limit the length of the index page to N posts. 0 means infinite.
+indexlen: 0
+# Title of the blog.
+title: Journal
+# Provide snips in the templates.
+snips: True
+# URL of the blog, used in the RSS feeds.
+baseurl: http://artagnon.com/
+# Separator string in the txt files between the header and the contents.
+separator: ---
