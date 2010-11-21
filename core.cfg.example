@@ -9,6 +9,8 @@ designdir: design
 htransform: markdown
 # Limit the length of the index page to N posts. 0 means infinite.
 indexlen: 0
+# Limit the length of the RSS feeds to N posts. 0 means infinite.
+rsslen: 10
 # Title of the blog.
 title: Journal
 # Provide snips in the templates.

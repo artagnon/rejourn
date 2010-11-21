@@ -173,8 +173,11 @@ class JIndex:
                         entries[-1]['rss_content'] = rss_content
         entries.sort(cmp = (lambda x, y: -1 if x['pubdate'] > y['pubdate'] else 1))
         indexlen = int(self.config.get('indexlen', 10))
+        rsslen = int(self.config.get('rsslen', 10))
         if self.name == 'index' and indexlen > 0:
             context['entries'] = entries[:indexlen]
+        elif self.name.endswith('.rss') and rsslen > 0:
+            context['entries'] = entries[:rsslen]
         else:
             context['entries'] = entries
         context['permalink'] = self.name
