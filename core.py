@@ -181,7 +181,10 @@ class JIndex:
         if self.name == 'index' or self.name == 'archive':
             context['title'] = self.config['title']
         else:
-            context['title'] = self.config['title'] + ' - Tags: ' + self.name.replace('.rss', '')
+            if self.name.endswith('.rss'):
+                context['title'] = saxutils.escape(self.config['title'] + ' - Tags: ' + self.name.replace('.rss', ''))
+            else:
+                context['title'] = self.config['title'] + ' - Tags: ' + self.name
         context['baseurl'] = self.config['baseurl']
         return context
 
