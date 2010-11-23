@@ -33,6 +33,7 @@ for filename in os.listdir(indir):
 # Write the Makefile
 with open('Makefile', 'w') as makefh:
     makefh.write(".PHONY: default test clean\n")
+    makefh.write("ifndef V\nQUIET_BUILD       = @echo '   ' BUILD $@;\nendif\n")
     # PHONY default: Build all targets
     makefh.write("default: "
                  + ' '.join(target.values()) + ' '
@@ -46,31 +47,31 @@ with open('Makefile', 'w') as makefh:
     for filename in target.keys():
         makefh.write(target[filename] + ': '
                      + os.path.join(indir, filename) + '\n\t'
-                     + './build ' + filename[:-4] + '\n')
+                     + '$(QUIET_BUILD)./build ' + filename[:-4] + '\n')
 
     # Special archive and index target
     makefh.write(outdir + '/archive.html: '
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
-                 + '\n\t./build archive '
+                 + '\n\t$(QUIET_BUILD)./build archive '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
     makefh.write(outdir + '/index.html: '
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
-                 + '\n\t./build index '
+                 + '\n\t$(QUIET_BUILD)./build index '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
     makefh.write(outdir + '/index.rss: '
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
-                 + '\n\t./build index.rss '
+                 + '\n\t$(QUIET_BUILD)./build index.rss '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
 
     # Tags
     for tag in tags:
         makefh.write(outdir + '/' + tag + '.html: '
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
-                + '\n\t./build ' + tag + ' '
+                + '\n\t$(QUIET_BUILD)./build ' + tag + ' '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
         makefh.write(outdir + '/' + tag + '.rss: '
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
-                + '\n\t./build ' + tag + '.rss '
+                + '\n\t$(QUIET_BUILD)./build ' + tag + '.rss '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
 
     # Phony test and clean targets
