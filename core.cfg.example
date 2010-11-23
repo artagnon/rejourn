@@ -11,6 +11,8 @@ htransform: markdown
 indexlen: 0
 # Limit the length of the RSS feeds to N posts. 0 means infinite.
 rsslen: 10
+# Limit the length of a tag page to N posts. 0 means infinite.
+taglen: 0
 # Title of the blog.
 title: Journal
 # Provide snips in the templates.
