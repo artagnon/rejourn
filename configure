@@ -20,7 +20,7 @@ for filename in os.listdir(indir):
             raw_header = infh.read().split('\n' + separator + '\n', 1)[0]
             header = util.parse_header(raw_header)
             title = header.get('title', 'No Title')
-            permalink = header.get('permalink', util.build_slug(title))
+            permalink = header.get('permalink', util.build_slug(config, title, filename))
             if not header.get('draft', None):
                 target[filename] = os.path.join(outdir, permalink + '.html')
                 if header.get('tags', None):

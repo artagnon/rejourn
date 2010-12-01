@@ -21,3 +21,6 @@ snips: True
 baseurl: http://artagnon.com/
 # Separator string in the txt files between the header and the contents.
 separator: ---
+# Source of the generated permalink, in case the permalink header is missing
+# Possible values: title, filename
+permalink: title

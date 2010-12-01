@@ -79,7 +79,7 @@ class JEntry:
         # want to change it
         title = context.get('title', 'No Title')
         context['permalink'] = context.get('permalink',
-                                           util.build_slug(title))
+                                           util.build_slug(self.config, title, self.inpath))
         context['draft'] = context.get('draft', None);
         
         # If pubdate is None, util.build_tiemstamp_h will return the
@@ -163,7 +163,7 @@ class JIndex:
                 # Has a date it was published, isn't a draft and isn't a static page
                 if pubdate and not (header.get('draft', None) or header.get('static', None)):
                     entries.append({'title': title,
-                                    'permalink': header.get('permalink', util.build_slug(title)),
+                                    'permalink': header.get('permalink', util.build_slug(self.config, title, infh.name)),
                                     'snip': snip,
                                     'pubdate': pubdate,
                                     'pubdate_h': pubdate_h})

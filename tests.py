@@ -14,7 +14,7 @@ class TestAll:
     def test_init(self):
         title = """The hacker's dream journal engine"""
         assert self.jentry.context['title'] == title
-        assert self.jentry.context['permalink'] == util.build_slug(title)
+        assert self.jentry.context['permalink'] == util.build_slug({}, title, None)
         assert self.jentry.context['tags'] == 'foo, bar'
 
     def test_parse_header(self):

@@ -29,9 +29,16 @@ view_mapper = {
     'rss'      : 'rss.xml',
     }
 
-def build_slug(text):
-    slug = re.sub(r'\W+', '-', text.lower())
-    return re.sub(r'-+', '-', slug).strip('-')[:30]
+def build_slug(config, title, filename):
+    if config.get('permalink', 'title') == 'title':
+        slug = re.sub(r'\W+', '-', title.lower())
+        return re.sub(r'-+', '-', slug).strip('-')[:30]
+    else:
+        # if the filename contains a slash, just use the part after the final slash
+        if '/' in filename:
+            filename = os.path.split(filename)[1]
+        # drop the .txt suffix
+        return filename[:-4]
 
 def parse_config():
     """Uses ConfigParser to parse core.cfg configuration file"""
