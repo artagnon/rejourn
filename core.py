@@ -53,8 +53,9 @@ class JEntry:
         buf = []
             
         # Write context information in header_table
+        nowriteback = self.config.get('nowriteback', '').split(', ')
         for key in util.header_table:
-            if context.get(key, None):
+            if (not key in nowriteback) and context.get(key, None):
                 buf.append(key + ': '
                                     + context[key].__str__() + '\n')
 

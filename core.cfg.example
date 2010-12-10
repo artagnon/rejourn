@@ -24,3 +24,6 @@ separator: ---
 # Source of the generated permalink, in case the permalink header is missing
 # Possible values: title, filename
 permalink: title
+# Don't write back certain headers. This is useful in case you don't plan to
+# customize the generated permalink.
+#nowriteback: permalink
