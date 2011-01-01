@@ -180,7 +180,7 @@ class JIndex:
             context['entries'] = entries[:indexlen]
         elif self.name.endswith('.rss') and rsslen > 0:
             context['entries'] = entries[:rsslen]
-        elif (not self.name.endswith('.rss')) and taglen > 0:
+        elif (not (self.name.endswith('.rss') or self.name == 'archive')) and taglen > 0:
             context['entries'] = entries[:taglen]
         else:
             context['entries'] = entries
