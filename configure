@@ -10,6 +10,7 @@ config = util.parse_config()
 indir = config.get('indir')
 outdir = config.get('outdir')
 separator = config.get('separator', '---')
+tagprefix = 'tags'
 target = {}
 tags = {}
 
@@ -40,7 +41,7 @@ with open('Makefile', 'w') as makefh:
                  + os.path.join(outdir, 'archive.html') + ' '
                  + os.path.join(outdir, 'index.html') + ' '
                  + os.path.join(outdir, 'index.rss') + ' '
-                 + ' '.join(map(lambda t: os.path.join(outdir, t + '.html'), tags.keys())) + ' '
+                 + ' '.join(map(lambda t: os.path.join(outdir, tagprefix, t + '.html'), tags.keys())) + ' '
                  + ' '.join(map(lambda t: os.path.join(outdir, t + '.rss'), tags.keys())) + '\n')
 
     # Write the various targets
@@ -65,7 +66,7 @@ with open('Makefile', 'w') as makefh:
 
     # Tags
     for tag in tags:
-        makefh.write(outdir + '/' + tag + '.html: '
+        makefh.write(outdir + '/' + tagprefix + '/' + tag + '.html: '
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
                 + '\n\t$(QUIET_BUILD)./build ' + tag + ' '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
@@ -78,7 +79,8 @@ with open('Makefile', 'w') as makefh:
     makefh.write("test:\n\tnosetests\n")
     makefh.write("clean:\n\t$(RM) "
                  + os.path.join(outdir, "*.html") + " "
-                 + os.path.join(outdir, "*.rss") + "\n")
+                 + os.path.join(outdir, "*.rss") + " "
+                 + os.path.join(outdir, tagprefix, "*.html"))
     
         
 # vim:set shiftwidth=4 softtabstop=4 expandtab:

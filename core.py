@@ -120,6 +120,7 @@ class JIndex:
         self.config = util.parse_config()
         self.name = name
         self.rss = rss
+        self.tagprefix = 'tags'
         self.context = self.__update_context(target_list)
         if not rss:
             tfile = util.view_mapper.get('index')
@@ -185,11 +186,13 @@ class JIndex:
         else:
             context['entries'] = entries
         context['permalink'] = self.name
-        if self.name == 'index' or self.name == 'archive':
+        if self.name.startswith('index') or self.name.startswith('archive'):
             context['title'] = self.config['title']
+            self.tagprefix = ''
         else:
             if self.name.endswith('.rss'):
                 context['title'] = saxutils.escape(self.config['title'] + ' - Tags: ' + self.name.replace('.rss', ''))
+                self.tagprefix = ''
             else:
                 context['title'] = self.config['title'] + ' - Tags: ' + self.name
         context['baseurl'] = self.config['baseurl']
@@ -208,7 +211,10 @@ class JIndex:
         if context is None:
             context = self.context
 
+        tagsdir = os.path.join(self.config['outdir'], self.tagprefix)
+        if not os.path.exists(tagsdir):
+            os.makedirs(tagsdir)
         self.__write_out(util.build_path(self.config['outdir'],
-                                         self.context['permalink']))
+                                         os.path.join(self.tagprefix, self.context['permalink'])))
         return True
 # vim:set shiftwidth=4 softtabstop=4 expandtab:
