@@ -38,9 +38,9 @@ with open('Makefile', 'w') as makefh:
     # PHONY default: Build all targets
     makefh.write("default: "
                  + ' '.join(target.values()) + ' '
-                 + os.path.join(outdir, 'archive.html') + ' '
-                 + os.path.join(outdir, 'index.html') + ' '
-                 + os.path.join(outdir, 'index.rss') + ' '
+                 + ' '.join([os.path.join(outdir, 'archive.html'),
+                             os.path.join(outdir, 'index.html'),
+                             os.path.join(outdir, 'index.rss')]) + ' '
                  + ' '.join(map(lambda t: os.path.join(outdir, tagprefix, t + '.html'), tags.keys())) + ' '
                  + ' '.join(map(lambda t: os.path.join(outdir, t + '.rss'), tags.keys())) + '\n')
 
@@ -51,26 +51,26 @@ with open('Makefile', 'w') as makefh:
                      + '$(QUIET_BUILD)./build ' + filename[:-4] + '\n')
 
     # Special archive and index target
-    makefh.write(outdir + '/archive.html: '
+    makefh.write(os.path.join(outdir, 'archive.html: ')
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t$(QUIET_BUILD)./build archive '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
-    makefh.write(outdir + '/index.html: '
+    makefh.write(os.path.join(outdir, 'index.html: ')
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t$(QUIET_BUILD)./build index '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
-    makefh.write(outdir + '/index.rss: '
+    makefh.write(os.path.join(outdir, 'index.rss: ')
                  + ' '.join(map(lambda f: os.path.join(indir, f), target.keys()))
                  + '\n\t$(QUIET_BUILD)./build index.rss '
                  + ' '.join(map(lambda f: f[:-4], target.keys())) + '\n')
 
     # Tags
     for tag in tags:
-        makefh.write(outdir + '/' + tagprefix + '/' + tag + '.html: '
+        makefh.write(os.path.join(outdir, tagprefix, tag + '.html: ')
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
                 + '\n\t$(QUIET_BUILD)./build ' + tag + ' '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
-        makefh.write(outdir + '/' + tag + '.rss: '
+        makefh.write(os.path.join(outdir, tag + '.rss: ')
                 + ' '.join(map(lambda f: os.path.join(indir, f), tags[tag]))
                 + '\n\t$(QUIET_BUILD)./build ' + tag + '.rss '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
