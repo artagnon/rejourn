@@ -147,7 +147,7 @@ class JIndex:
         entries = []
         context = {}
         for target in target_list:
-            with open(os.path.join(self.config['indir'], target + '.txt'), 'r') as infh:
+            with open(target + '.txt', 'r') as infh:
                 raw_header, content = infh.read().split('\n' + self.config.get('separator', '---') + '\n', 1)
                 header = util.parse_header(raw_header)
                 title = header.get('title', 'No Title')

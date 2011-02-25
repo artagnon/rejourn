@@ -18,7 +18,7 @@ def main(argv = None):
         else:
             jpage = JIndex(argv[1], argv[2:], rss = True)
     else:
-        jpage = JEntry(os.path.join(os.getcwd(), config.get('indir', 'in'), argv[1] + '.txt'))
+        jpage = JEntry(os.path.join(os.getcwd(), argv[1] + '.txt'))
     jpage.publish()
 
 if __name__ == "__main__":
