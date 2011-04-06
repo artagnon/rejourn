@@ -19,7 +19,7 @@ Features:
 * Drafts. The 'draft' metadata header controls whether the output
   should be built.
 * Static pages. For pages in the toplevel index like "About
-  me". Controlled by 'draft' metadata header.
+  me". Controlled by 'static' metadata header.
 * Configurable views. The template to render with the given content is
   controlled by a simple 'view_mapper' in 'util.py'.
 * Tags. You can assign associate multiple freeform tags to a single
