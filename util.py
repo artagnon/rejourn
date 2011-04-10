@@ -55,7 +55,10 @@ def parse_header(raw_header):
 
     context = {}
     for line in raw_header.split('\n'):
-        (key, value) = line.split(': ', 1)
+        try:
+            (key, value) = line.split(': ', 1)
+        except ValueError:
+            raise Exception("Header line '%s' is not in a 'variable: value' format" % line)
         context[key] = value
     return context
 
