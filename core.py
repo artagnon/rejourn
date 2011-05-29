@@ -6,6 +6,7 @@ from xml.sax import saxutils
 from datetime import datetime
 import util
 import sys
+import hashlib
 
 sys = reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -42,7 +43,13 @@ class JEntry:
 
         context['html_content'] = util.htransform(self.content,
                                                   self.config.get('htransform', None))
-        return template.render(**context)
+        try:
+            return template.render(**context)
+        except UnicodeDecodeError, msg:
+            digest = hashlib.sha1(self.content).hexdigest()
+            print "Rendering failed: %s" % msg
+            print "Renter input is at '%s'." % os.path.join('cache', digest)
+            sys.exit(1)
 
     def __update_header(self, context = None):
         """Updates file header with given context. Function has
