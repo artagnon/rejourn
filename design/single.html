@@ -1,22 +1,20 @@
 <%inherit file="base.html"/>
 <!-- Single entry -->
-<div id="leaf-title"> 
+<div id="leaf-title">
   <h1><a href="${permalink}">${title}</a></h1>
 </div>
-<div id="leaf-stats"> 
+<div id="leaf-stats">
   <p>
-    Posted
-    <span class="timeago" title="${pubdate}">${pubdate_h}</span>
-    by ${author}
+    Posted <span class="timeago" title="${pubdate}">${pubdate_h}</span>
   </p>
-% if tags:
+  % if tags:
   <p>
     Tags:
     % for tag in tags.split(', '):
     <a href="tags/${tag}">${tag}</a>
     % endfor
   </p>
-% endif
+  % endif
 </div>
 <div id="leaf-content" class="">
   <!-- Body -->
