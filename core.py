@@ -186,6 +186,11 @@ class JIndex:
         taglen = int(self.config.get('taglen', 0))
         if self.name == 'index' and indexlen > 0:
             context['entries'] = entries[:indexlen]
+            if os.path.exists('tags'):
+                with open('tags') as tagsfh:
+                    context['tags'] = tagsfh.read()
+            else:
+                context['tags'] = ''
         elif self.name.endswith('.rss') and rsslen > 0:
             context['entries'] = entries[:rsslen]
         elif (not (self.name.endswith('.rss') or self.name == 'archive')) and taglen > 0:

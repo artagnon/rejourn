@@ -76,13 +76,18 @@ with open('Makefile', 'w') as makefh:
                 + ' '.join(tags[tag])
                 + '\n\t$(QUIET_BUILD)./build ' + tag + '.rss '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
+    tagnames = tags.keys()
+    tagnames.sort()
+    with open('tags', 'w') as tagsfh:
+        tagsfh.write(', '.join(tagnames))
 
     # Phony test and clean targets
     makefh.write("test:\n\tnosetests\n")
     makefh.write("clean:\n\t$(RM) "
                  + os.path.join(outdir, "*.html") + " "
                  + os.path.join(outdir, "*.rss") + " "
-                 + os.path.join(outdir, tagprefix, "*.html"))
+                 + os.path.join(outdir, tagprefix, "*.html") + " "
+                 + "tags")
     
         
 # vim:set shiftwidth=4 softtabstop=4 expandtab:
