@@ -2,6 +2,7 @@
 #-*- Mode:Python -*-
 from __future__ import with_statement
 import os
+import re
 import util
 
 """Generate the Makefile"""
@@ -76,8 +77,13 @@ with open('Makefile', 'w') as makefh:
                 + ' '.join(tags[tag])
                 + '\n\t$(QUIET_BUILD)./build ' + tag + '.rss '
                 + ' '.join(map(lambda f: f[:-4], tags[tag])) + '\n')
-    tagnames = tags.keys()
-    tagnames.sort()
+    tagnames = map(lambda i: "%s (%d)" % (i, len(tags[i])), tags.keys())
+
+    # Sort tags: begin with the one with the most posts
+    pattern = r".+ \((.+)\)"
+    repl = r"\1"
+    tagnames.sort(lambda i, j: cmp(int(re.sub(pattern, repl, i)), int(re.sub(pattern, repl, j))), reverse = True)
+
     with open('tags', 'w') as tagsfh:
         tagsfh.write(', '.join(tagnames))
 
