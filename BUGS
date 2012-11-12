@@ -1,5 +1,0 @@
--*- Mode:Org -*-
-
-* [X] Header values cannot contain the character ": "
-* [X] mtime is touched when header doesn't need updating
-* [ ] codehilite is applied to all code blocks -- even those that aren't code
