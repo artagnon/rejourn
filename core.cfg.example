@@ -5,8 +5,6 @@ outdir: out
 indir: in
 # Where the design templates live.
 designdir: design
-# Rendering engine to use. Possible values: asciidoc and markdown
-htransform: markdown
 # Limit the length of the index page to N posts. 0 means infinite.
 indexlen: 0
 # Limit the length of the RSS feeds to N posts. 0 means infinite.

@@ -35,7 +35,7 @@ information like author/ date; rejourn takes care of the rest.
 * snip: A short description of the article.  Appears in index.
 * view: The design view to use.  Can be single, index, or rss.
 * htransform: The filter to pass the content through.  Can be
-  "markdown" or "asciidoc".
+  "markdown", "asciidoc", or "html".
 * tags: The tags the post should be associated with.
 * static: A boolean specifying whether the page should appear in the
   index.  Useful for "about" pages.

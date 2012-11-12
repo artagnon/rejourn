@@ -11,15 +11,16 @@ time_isofmt = '%Y-%m-%dT%H:%M:%SZ'
 
 # List of valid headers to extract from context
 header_table = [
-    'view',
-    'permalink',
-    'draft',
-    'pubdate',
     'title',
     'author',
-    'static',
     'snip',
+    'view',
+    'htransform',
     'tags',
+    'static',
+    'draft',
+    'permalink',
+    'pubdate',
     ]
 
 # Dictionary of views
@@ -102,6 +103,7 @@ def asciidoc(content):
 htransform_mapper = {
     'markdown'  : markdown,
     'asciidoc'  : asciidoc,
+    'html'      : lambda content: content
     }
 
 def htransform(content, transform):

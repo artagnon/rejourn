@@ -42,7 +42,7 @@ class JEntry:
             context = self.context
 
         context['html_content'] = util.htransform(self.content,
-                                                  self.config.get('htransform', None))
+                                                  context.get('htransform', 'markdown'))
         try:
             return template.render(**context)
         except UnicodeDecodeError, msg:
