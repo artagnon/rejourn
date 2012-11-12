@@ -27,6 +27,7 @@ header_table = [
 view_mapper = {
     'single'   : 'single.html',
     'index'    : 'index.html',
+    'resume'   : 'resume.html',
     'rss'      : 'rss.xml',
     }
 
