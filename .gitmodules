@@ -1,0 +1,6 @@
+[submodule "in"]
+	path = in
+	url = git@github.com:artagnon/artagnon.com
+[submodule "out"]
+	path = out
+	url = artagnon_artagnon@ssh.phx.nearlyfreespeech.net:~/artagnon.com.git

@@ -2,7 +2,5 @@
 *.pyc
 .#*
 #*
-out/
-in/
 Makefile
 core.cfg
