@@ -87,13 +87,13 @@ with open('Makefile', 'w') as makefh:
     with open('tags', 'w') as tagsfh:
         tagsfh.write(', '.join(tagnames))
 
-    # Phony test and clean targets
+    # Phony server, test, and clean targets
+    makefh.write("server:\n\tcd out; python -m SimpleHTTPServer 8000\n")
     makefh.write("test:\n\tnosetests\n")
     makefh.write("clean:\n\t$(RM) "
                  + os.path.join(outdir, "*.html") + " "
                  + os.path.join(outdir, "*.rss") + " "
                  + os.path.join(outdir, tagprefix, "*.html") + " "
                  + "tags")
-    
         
 # vim:set shiftwidth=4 softtabstop=4 expandtab:
