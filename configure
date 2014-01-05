@@ -88,7 +88,7 @@ with open('Makefile', 'w') as makefh:
         tagsfh.write(', '.join(tagnames))
 
     # Phony server, test, and clean targets
-    makefh.write("server:\n\tcd out; python -m SimpleHTTPServer 8000\n")
+    makefh.write("server:\n\tcd %s; python -m SimpleHTTPServer 8000\n" % outdir)
     makefh.write("test:\n\tnosetests\n")
     makefh.write("clean:\n\t$(RM) "
                  + os.path.join(outdir, "*.html") + " "
