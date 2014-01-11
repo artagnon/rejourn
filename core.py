@@ -41,8 +41,10 @@ class JEntry:
         if context is None:
             context = self.context
 
-        context['html_content'] = util.htransform(self.content,
-                                                  context.get('htransform', 'markdown'))
+        markup = self.config.get('htransform', None)
+        if markup is None:
+            markup = context.get('htransform', 'markdown')
+        context['html_content'] = util.htransform(self.content, markup)
         try:
             return template.render(**context)
         except UnicodeDecodeError, msg:
